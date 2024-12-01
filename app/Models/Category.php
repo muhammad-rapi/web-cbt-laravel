@@ -12,4 +12,5 @@ class Category extends Model
     use HasFactory, SoftDeletes, HasUlids;
 
     protected $guarded = ['id'];
+
 }
