@@ -34,7 +34,7 @@ Route::middleware('auth')->group(function () {
 
                 Route::post('/question/save/{course}', [CourseQuestionController::class, 'store'])->name('course.create.question.store');
 
-                Route::resource('course_questions', [CourseQuestionController::class]);
+                Route::resource('course_questions', CourseQuestionController::class);
 
                 Route::get('/students/show/{course}', [CourseStudentController::class, 'index'])->name('course.course_students.index');
 
@@ -51,13 +51,13 @@ Route::middleware('auth')->group(function () {
             // menampilkan seluruh kelas yang diberikan oleh guru
             Route::get('/learning', [LearningController::class, 'index'])->name('learning.index');
 
-            Route::get('/learning/finished/{course}', LearningController::class, 'learning_finished')->name('learning.finished.course');
+            Route::get('/learning/finished/{course}', [LearningController::class, 'learning_finished'])->name('learning.finished.course');
             
-            Route::get('/learning/raport/{course}', LearningController::class, 'learning_raport')->name('learning.raport.course');
+            Route::get('/learning/raport/{course}', [LearningController::class, 'learning_raport'])->name('learning.raport.course');
             
-            Route::get('/learning/{course}/{question}', LearningController::class, 'learning')->name('learning.course');
+            Route::get('/learning/{course}/{question}', [LearningController::class, 'learning'])->name('learning.course');
 
-            Route::get('/learning/{course}/{question}', StudentAnswerController::class, 'store')->name('learning.course.answer.store');
+            Route::get('/learning/{course}/{question}', [StudentAnswerController::class, 'store'])->name('learning.course.answer.store');
             
         });
         
