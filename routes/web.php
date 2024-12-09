@@ -30,17 +30,17 @@ Route::middleware('auth')->group(function () {
 
             Route::prefix('course')->name('course.')->group(function () {
 
-                Route::get('/question/create/{course}', [CourseQuestionController::class, 'create'])->name('course.create.question');
+                Route::get('/question/create/{course}', [CourseQuestionController::class, 'create'])->name('create.question');
 
-                Route::post('/question/save/{course}', [CourseQuestionController::class, 'store'])->name('course.create.question.store');
+                Route::post('/question/save/{course}', [CourseQuestionController::class, 'store'])->name('create.question.store');
 
                 Route::resource('course_questions', CourseQuestionController::class);
 
-                Route::get('/students/show/{course}', [CourseStudentController::class, 'index'])->name('course.course_students.index');
+                Route::get('/students/show/{course}', [CourseStudentController::class, 'index'])->name('course_students.index');
 
-                Route::get('/students/create/{course}', [CourseStudentController::class, 'create'])->name('course.course_students.create');
+                Route::get('/students/create/{course}', [CourseStudentController::class, 'create'])->name('course_students.create');
 
-                Route::get('/students/create/save/{course}', [CourseStudentController::class, 'store'])->name('course.course_students.store');
+                Route::get('/students/create/save/{course}', [CourseStudentController::class, 'store'])->name('course_students.store');
                 
             });
 

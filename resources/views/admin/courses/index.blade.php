@@ -203,7 +203,7 @@
                             </div>
                         </div>
                         <div class="flex shrink-0 w-[150px] items-center justify-center">
-                            <p class="font-semibold">{{ $course->created_at->format('F j, Y')}}</p>
+                            <p class="font-semibold">{{ $course->created_at->format('F j, Y') }}</p>
                         </div>
 
                         @if ($course->category->name == 'Programming')
@@ -227,7 +227,7 @@
                                         menu
                                         <img src="{{ asset('images/icons/arrow-down.svg') }}" alt="icon">
                                     </button>
-                                    <a href="#"
+                                    <a href="{{ route('dashboard.courses.show', $course->id) }}"
                                         class="flex items-center justify-between font-bold text-sm w-full">
                                         Manage
                                     </a>
@@ -235,15 +235,16 @@
                                         class="flex items-center justify-between font-bold text-sm w-full">
                                         Students
                                     </a>
-                                    <a href="{{route('dashboard.courses.edit', $course->id)}}"
+                                    <a href="{{ route('dashboard.courses.edit', $course->id) }}"
                                         class="flex items-center justify-between font-bold text-sm w-full">
                                         Edit Course
                                     </a>
-                                 
-                                    <form action="{{route('dashboard.courses.destroy', $course)}}" method="post">
+
+                                    <form action="{{ route('dashboard.courses.destroy', $course) }}" method="post">
                                         @method('DELETE')
                                         @csrf
-                                        <button type="submit" class="flex items-center justify-between font-bold text-sm w-full text-[#FD445E]">
+                                        <button type="submit"
+                                            class="flex items-center justify-between font-bold text-sm w-full text-[#FD445E]">
                                             Delete
                                         </button>
                                     </form>
@@ -252,6 +253,9 @@
                         </div>
                     </div>
                 @empty
+                    <p>
+                        Belum ada kelas yang tersedia
+                    </p>
                 @endforelse
 
 
