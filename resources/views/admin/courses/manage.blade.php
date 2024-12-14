@@ -103,13 +103,16 @@
                         </a>
                     </li>
                     <li>
-                        <a href="signin.html"
-                            class="p-[10px_16px] flex items-center gap-[14px] rounded-full h-11 transition-all duration-300 hover:bg-[#2B82FE]">
-                            <div>
-                                <img src="{{ asset('/images/icons/security-safe.svg') }}" alt="icon">
-                            </div>
-                            <p class="font-semibold transition-all duration-300 hover:text-white">Logout</p>
-                        </a>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit"
+                                class="p-[10px_16px] flex items-center gap-[14px] rounded-full h-11 w-full transition-all duration-300 hover:bg-[#2B82FE]">
+                                <div>
+                                    <img src="{{ asset('/images/icons/security-safe.svg') }}" alt="icon">
+                                </div>
+                                <p class="font-semibold transition-all duration-300 hover:text-white">Logout</p>
+                            </button>
+                        </form>
                     </li>
                 </ul>
             </div>
@@ -151,7 +154,7 @@
                     <div class="flex gap-3 items-center">
                         <div class="flex flex-col text-right">
                             <p class="text-sm text-[#7F8190]">Howdy</p>
-                            <p class="font-semibold">Fany Alqo</p>
+                            <p class="font-semibold">{{Auth::user()->name}}</p>
                         </div>
                         <div class="w-[46px] h-[46px]">
                             <img src="{{ asset('/images/photos/default-photo.svg') }}" alt="photo">
@@ -205,7 +208,8 @@
                     </a>
                     <div
                         class="dropdown-menu absolute hidden right-0 top-[66px] w-[270px] flex flex-col gap-4 p-5 border border-[#EEEEEE] bg-white rounded-[18px] transition-all duration-300 shadow-[0_10px_16px_0_#0A090B0D]">
-                        <a href="" class="flex gap-[10px] items-center">
+                        <a href="{{ route('dashboard.course.course_students.create', $course) }}"
+                            class="flex gap-[10px] items-center">
                             <div class="w-5 h-5">
                                 <img src="{{ asset('/images/icons/profile-2user-outline.svg') }}" alt="icon">
                             </div>
@@ -253,7 +257,7 @@
             <div id="course-test" class="mx-[70px] w-[870px] mt-[30px]">
                 <h2 class="font-bold text-2xl">Course Tests</h2>
                 <div class="flex flex-col gap-[30px] mt-2">
-                    <a href="{{route('dashboard.course.create.question', $course)}}"
+                    <a href="{{ route('dashboard.course.create.question', $course) }}"
                         class="w-full h-[92px] flex items-center justify-center p-4 border-dashed border-2 border-[#0A090B] rounded-[20px]">
                         <div class="flex items-center gap-5">
                             <div>
@@ -270,9 +274,10 @@
                                 <p class="font-bold text-xl">{{ $question->question }}</p>
                             </div>
                             <div class="flex items-center gap-[14px]">
-                                <a href="{{route('dashboard.course.course_questions.edit', $question)}}"
+                                <a href="{{ route('dashboard.course.course_questions.edit', $question) }}"
                                     class="bg-[#0A090B] p-[14px_30px] rounded-full text-white font-semibold">Edit</a>
-                                <form action="{{route('dashboard.course.course_questions.destroy', $question)}}" method="POST">
+                                <form action="{{ route('dashboard.course.course_questions.destroy', $question) }}"
+                                    method="POST">
                                     @csrf
                                     @method('DELETE')
                                     <button

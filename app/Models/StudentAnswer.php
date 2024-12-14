@@ -20,7 +20,7 @@ class StudentAnswer extends Model
     }
 
     // relasi dengan question
-    public function questions()
+    public function question()
     {
         return $this->belongsTo(CourseQuestion::class, 'course_question_id');
     }

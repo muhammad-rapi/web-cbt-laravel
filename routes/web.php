@@ -40,10 +40,8 @@ Route::middleware('auth')->group(function () {
 
                 Route::get('/students/create/{course}', [CourseStudentController::class, 'create'])->name('course_students.create');
 
-                Route::get('/students/create/save/{course}', [CourseStudentController::class, 'store'])->name('course_students.store');
-                
+                Route::post('/students/create/save/{course}', [CourseStudentController::class, 'store'])->name('course_students.store');
             });
-
         });
 
         Route::middleware(['role:student'])->group(function () {
@@ -52,16 +50,14 @@ Route::middleware('auth')->group(function () {
             Route::get('/learning', [LearningController::class, 'index'])->name('learning.index');
 
             Route::get('/learning/finished/{course}', [LearningController::class, 'learning_finished'])->name('learning.finished.course');
-            
-            Route::get('/learning/raport/{course}', [LearningController::class, 'learning_raport'])->name('learning.raport.course');
-            
-            Route::get('/learning/{course}/{question}', [LearningController::class, 'learning'])->name('learning.course');
 
-            Route::get('/learning/{course}/{question}', [StudentAnswerController::class, 'store'])->name('learning.course.answer.store');
-            
+            Route::get('/learning/raport/{course}', [LearningController::class, 'learning_raport'])->name('learning.raport.course');
+
+            Route::get('/learning/course/{course}/{question}', [LearningController::class, 'learning'])->name('learning.course');
+
+            Route::post('/learning/{course}/{question}', [StudentAnswerController::class, 'store'])->name('learning.course.answer.store');
         });
-        
     });
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

@@ -60,7 +60,7 @@ class CourseController extends Controller
         } catch (\Exception $e) {
             Db::rollBack();
             $error = ValidationException::withMessages([
-                'system_errpr' => ['System Error!', $e->getMessage()]
+                'system_error' => ['System Error!', $e->getMessage()]
             ]);
             throw $error;
         }
@@ -120,7 +120,7 @@ class CourseController extends Controller
         } catch (\Exception $e) {
             Db::rollBack();
             $error = ValidationException::withMessages([
-                'system_errpr' => ['System Error!', $e->getMessage()]
+                'system_error' => ['System Error!', $e->getMessage()]
             ]);
             throw $error;
         }
@@ -137,7 +137,7 @@ class CourseController extends Controller
         } catch (\Exception $e) {
             Db::rollBack();
             $error = ValidationException::withMessages([
-                'system_errpr' => ['System Error!', $e->getMessage()]
+                'system_error' => ['System Error!', $e->getMessage()]
             ]);
             throw $error;
         }

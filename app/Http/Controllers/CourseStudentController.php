@@ -2,8 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Course;
 use App\Models\CourseStudent;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Str;
+
+
+
 
 class CourseStudentController extends Controller
 {
@@ -18,17 +26,61 @@ class CourseStudentController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Course $course)
     {
-        //
+        $students = $course->students()->orderBy('id', 'DESC')->get();
+        return view('admin.students.add_student', [
+            'course' => $course,
+            'students' => $students
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, Course $course)
     {
-        //
+        $request->validate([
+            'email'=> 'required|email|string|max:255',
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        if(!$user) {
+            $error =ValidationException::withMessages([
+                'system_error' => ['Email Student Tidak tersedia!']
+            ]);
+            throw $error;
+        }
+
+        $isEnrolled = $course->students()->where('user_id', $user->id)->exists();
+
+        if($isEnrolled){
+            $error = ValidationException::withMessages([
+                'system_error' => ['Student sudah memiliki hak akses kelas!']
+            ]);
+            throw $error;
+        }
+
+        DB::beginTransaction();
+
+        try {
+
+            $course->students()->attach($user->id, [
+                'id' => (string) Str::ulid(),
+            ]);
+
+            DB::commit();
+ 
+            return redirect()->route('dashboard.course.course_students.index', $course);
+        } catch (\Exception $e) {
+            dd($e);
+            Db::rollBack();
+            $error = ValidationException::withMessages([
+                'system_error' => ['System Error!', $e->getMessage()]
+            ]);
+            throw $error;
+        }
     }
 
     /**
