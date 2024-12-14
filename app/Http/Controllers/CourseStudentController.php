@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Course;
 use App\Models\CourseStudent;
+use App\Models\StudentAnswer;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -18,9 +19,34 @@ class CourseStudentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Course $course)
     {
-        //
+        $students = $course->students()->orderBy('id', 'DESC')->get();
+        $questions = $course->questions()->orderBy('id', 'DESC')->get();
+        $totalQuestions = $questions->count();
+
+        foreach ($students as $student) {
+            $studentAnswers = StudentAnswer::whereHas('question', function ($query) use ($course) {
+                $query->where('course_id', $course->id);
+            })->where('user_id', $student->id)->get();
+
+            $answerCount = $studentAnswers->count();
+            $correctAnswerCount = $studentAnswers->where('answer', 'correct')->count();
+
+            if ($answerCount == 0) {
+                $student->status = 'Not Started';
+            } elseif ($correctAnswerCount < $totalQuestions) {
+                $student->status = 'Not Passed';
+            } elseif ($correctAnswerCount == $totalQuestions) {
+                $student->status = 'Passed';
+            }
+        }
+
+        return view('admin.students.index', [
+            'questions' => $questions,
+            'course' => $course,
+            'students' => $students
+        ]);
     }
 
     /**
@@ -41,13 +67,13 @@ class CourseStudentController extends Controller
     public function store(Request $request, Course $course)
     {
         $request->validate([
-            'email'=> 'required|email|string|max:255',
+            'email' => 'required|email|string|max:255',
         ]);
 
         $user = User::where('email', $request->email)->first();
 
-        if(!$user) {
-            $error =ValidationException::withMessages([
+        if (!$user) {
+            $error = ValidationException::withMessages([
                 'system_error' => ['Email Student Tidak tersedia!']
             ]);
             throw $error;
@@ -55,7 +81,7 @@ class CourseStudentController extends Controller
 
         $isEnrolled = $course->students()->where('user_id', $user->id)->exists();
 
-        if($isEnrolled){
+        if ($isEnrolled) {
             $error = ValidationException::withMessages([
                 'system_error' => ['Student sudah memiliki hak akses kelas!']
             ]);
@@ -71,7 +97,7 @@ class CourseStudentController extends Controller
             ]);
 
             DB::commit();
- 
+
             return redirect()->route('dashboard.course.course_students.index', $course);
         } catch (\Exception $e) {
             dd($e);

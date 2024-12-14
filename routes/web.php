@@ -49,9 +49,9 @@ Route::middleware('auth')->group(function () {
             // menampilkan seluruh kelas yang diberikan oleh guru
             Route::get('/learning', [LearningController::class, 'index'])->name('learning.index');
 
-            Route::get('/learning/finished/{course}', [LearningController::class, 'learning_finished'])->name('learning.finished.course');
+            Route::get('/learning/finished/{course}', [LearningController::class, 'learningFinished'])->name('learning.finished.course');
 
-            Route::get('/learning/raport/{course}', [LearningController::class, 'learning_raport'])->name('learning.raport.course');
+            Route::get('/learning/raport/{course}', [LearningController::class, 'learningRaport'])->name('learning.raport.course');
 
             Route::get('/learning/course/{course}/{question}', [LearningController::class, 'learning'])->name('learning.course');
 
